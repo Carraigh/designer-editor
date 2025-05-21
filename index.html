@@ -128,7 +128,7 @@
 <body>
 
   <header>
-    <h1>🛠️ Простой HTML/CSS Редактор</h1>
+    <h1>🛠 Простой HTML/CSS Редактор</h1>
     <p>Редактируй слева, смотри результат справа</p>
   </header>
 
@@ -211,17 +211,20 @@
       menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
+    // Улучшенная проверка HTML
+    function isWellFormed(html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      return !doc.querySelector('parsererror');
+    }
+
     function applyCode() {
       let html = htmlEditor.getValue();
       let css = cssEditor.getValue();
 
       try {
-        // Простая проверка на не закрытые теги
-        const openTags = (html.match(/<[^\/][^>]*>/g) || []).length;
-        const closeTags = (html.match(/<\/[^>]*>/g) || []).length;
-
-        if (openTags !== closeTags) {
-          throw new Error("HTML содержит незакрытые теги");
+        if (!isWellFormed(html)) {
+          throw new Error("HTML содержит ошибки разметки");
         }
 
         const fullHTML = `
@@ -236,8 +239,10 @@
           </html>
         `;
         outputFrame.srcdoc = fullHTML;
+
         htmlEditor.getWrapperElement().style.borderColor = '#ccc';
         cssEditor.getWrapperElement().style.borderColor = '#ccc';
+
       } catch (e) {
         alert("Ошибка в коде!\n" + e.message);
         htmlEditor.getWrapperElement().style.borderColor = 'red';
