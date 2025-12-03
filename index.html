@@ -2,15 +2,21 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🎨 Учебный Макет Дизайнера</title>
 
-  <!-- CodeMirror CSS -->
-  <link id="cm-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css ">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/dracula.min.css ">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/base16-light.min.css ">
+  <!-- CodeMirror CSS (исправлены пробелы в URL!) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/dracula.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/base16-light.min.css">
 
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: sans-serif;
       margin: 0;
@@ -67,6 +73,8 @@
       font-size: 14px;
       height: 100%;
       min-height: 200px;
+      overflow: hidden;
+      touch-action: manipulation; /* улучшает поведение на сенсорных */
     }
 
     iframe {
@@ -123,6 +131,54 @@
     .hidden-file-input {
       display: none;
     }
+
+    /* ✅ АДАПТИВНОСТЬ — основное улучшение */
+    @media (max-width: 768px) {
+      main {
+        flex-direction: column;
+        height: calc(100vh - 70px); /* минус header */
+      }
+
+      .editor-container,
+      iframe {
+        width: 100%;
+        height: 35vh !important;
+        min-height: 150px;
+      }
+
+      iframe {
+        height: 30vh !important;
+      }
+
+      /* Меню слева — надёжнее на узких экранах */
+      .menu-button {
+        right: auto;
+        left: 10px;
+      }
+
+      .dropdown-menu {
+        right: auto;
+        left: 10px;
+        top: 50px;
+        max-height: 40vh;
+        overflow-y: auto;
+      }
+
+      header h1 { font-size: 1.0em; }
+      header p { font-size: 0.8em; }
+      .CodeMirror { font-size: 12px; }
+      .dropdown-menu button { padding: 8px 10px; font-size: 13px; }
+    }
+
+    @media (max-width: 480px) {
+      .editor-container,
+      iframe {
+        height: 28vh !important;
+      }
+
+      header h1 { font-size: 0.9em; }
+      .CodeMirror { font-size: 11px; }
+    }
   </style>
 </head>
 <body>
@@ -168,10 +224,10 @@
   <input type="file" id="file-html" class="hidden-file-input" accept=".html,.txt">
   <input type="file" id="file-css" class="hidden-file-input" accept=".css,.txt">
 
-  <!-- CodeMirror JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js "></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/htmlmixed/htmlmixed.min.js "></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/css/css.min.js "></script>
+  <!-- CodeMirror JS (исправлены пробелы!) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/css/css.min.js"></script>
 
   <script>
     const defaultHTML = `<!-- HTML код -->\n<h1>Привет, дизайнер!</h1>\n<p>Начни редактировать слева.</p>`;
@@ -211,7 +267,6 @@
       menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Улучшенная проверка HTML
     function isWellFormed(html) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
@@ -231,6 +286,7 @@
           <!DOCTYPE html>
           <html>
           <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>${css}</style>
           </head>
           <body>
