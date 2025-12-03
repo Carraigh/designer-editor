@@ -1,0 +1,243 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #fff;
+  color: #000;
+  transition: all 0.3s ease;
+}
+
+body.dark {
+  background-color: #1e1e1e;
+  color: #eee;
+}
+
+header {
+  background: #333;
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+header h1 {
+  font-size: 1.25em;
+  margin: 0;
+  font-weight: 600;
+  text-align: center;
+}
+
+header p {
+  font-size: 0.95em;
+  margin: 0;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.menu-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+}
+
+.menu-button {
+  width: 100%;
+  padding: 9px 14px;
+  background: #45B7D1;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.menu-button:hover {
+  background: #3aa0c2;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.dropdown-menu button {
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu button:hover {
+  background: #f8f8f8;
+}
+
+.dropdown-menu hr {
+  margin: 6px 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+/* === ИКОНКИ === */
+.icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  stroke: currentColor;
+  fill: none;
+}
+
+.dropdown-menu button:hover .icon {
+  stroke: #FF6B6B;
+}
+
+main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  flex: 1;
+}
+
+.CodeMirror {
+  flex: 1;
+  border: none;
+  font-size: 14px;
+  min-height: 200px;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+/* === Подписи над редакторами === */
+.editor-label {
+  background: #f0f0f0;
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 0.85em;
+  border-bottom: 1px solid #ccc;
+  user-select: none;
+}
+
+/* === Подсказки (tooltips) === */
+button[title] {
+  position: relative;
+}
+button[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 0.2s forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* === JS-редактор (скрыт по умолчанию) === */
+.js-editor-container {
+  display: none;
+}
+.js-editor-container:not(.hidden) {
+  display: flex;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* === Анимация предпросмотра === */
+.preview-container {
+  flex: 1;
+  overflow: hidden;
+}
+#output-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+  overflow: auto;
+  transition: opacity 0.3s ease;
+}
+.apply-fade {
+  opacity: 0.5;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+    height: calc(100vh - 120px);
+  }
+
+  .editor-container,
+  .preview-container {
+    width: 100%;
+    height: 32vh !important;
+    min-height: 140px;
+  }
+
+  .preview-container {
+    height: 28vh !important;
+  }
+
+  header h1 { font-size: 1.1em; }
+  header p { font-size: 0.9em; }
+  .CodeMirror { font-size: 12px; }
+  .dropdown-menu button { font-size: 13px; padding: 8px 12px; }
+}
+
+@media (max-width: 480px) {
+  .editor-container,
+  .preview-container {
+    height: 26vh !important;
+  }
+
+  .CodeMirror { font-size: 11px; }
+  .menu-button { font-size: 13px; padding: 7px 12px; }
+}

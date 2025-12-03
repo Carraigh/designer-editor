@@ -3,442 +3,158 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎨 Учебный Макет Дизайнера</title>
+  <title>🎨 Редактор для дизайнеров</title>
 
-  <!-- CodeMirror CSS -->
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#45B7D1">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/icons/favicon-192.png">
+
+  <!-- CodeMirror -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/dracula.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/base16-light.min.css">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-      background-color: #fff;
-      color: #000;
-      transition: all 0.3s ease;
-    }
-
-    body.dark {
-      background-color: #1e1e1e;
-      color: #eee;
-    }
-
-    header {
-      background: #333;
-      color: white;
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    header h1 {
-      font-size: 1.2em;
-      margin: 0;
-      text-align: center;
-    }
-
-    header p {
-      font-size: 0.9em;
-      margin: 0;
-      text-align: center;
-    }
-
-    .menu-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 220px;
-    }
-
-    .menu-button {
-      width: 100%;
-      padding: 8px 12px;
-      background: #45B7D1;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      z-index: 10;
-      display: none;
-      flex-direction: column;
-      min-width: 180px;
-      max-height: 50vh;
-      overflow-y: auto;
-    }
-
-    .dropdown-menu button {
-      width: 100%;
-      text-align: left;
-      padding: 10px 12px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .dropdown-menu button:hover {
-      background: #f0f0f0;
-    }
-
-    main {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .editor-container {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid #ccc;
-    }
-
-    .CodeMirror {
-      flex: 1;
-      border: none;
-      font-size: 14px;
-      height: 100%;
-      min-height: 200px;
-      overflow: hidden;
-      touch-action: manipulation;
-    }
-
-    iframe {
-      width: 50%;
-      height: 100%;
-      border: none;
-      background: white;
-      overflow: auto;
-    }
-
-    .hidden-file-input {
-      display: none;
-    }
-
-    /* ✅ АДАПТИВНОСТЬ */
-    @media (min-width: 769px) {
-      header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .menu-wrapper {
-        max-width: none;
-        width: auto;
-      }
-
-      .menu-button {
-        width: auto;
-        max-width: 120px;
-      }
-
-      .dropdown-menu {
-        left: auto;
-        right: 0;
-        top: calc(100% + 4px);
-        max-height: none;
-      }
-    }
-
-    @media (max-width: 768px) {
-      main {
-        flex-direction: column;
-        height: calc(100vh - 120px); /* header + меню */
-      }
-
-      .editor-container,
-      iframe {
-        width: 100%;
-        height: 32vh !important;
-        min-height: 140px;
-      }
-
-      iframe {
-        height: 28vh !important;
-      }
-
-      header h1 { font-size: 1.0em; }
-      header p { font-size: 0.85em; }
-      .CodeMirror { font-size: 12px; }
-      .dropdown-menu button { font-size: 13px; padding: 8px 10px; }
-    }
-
-    @media (max-width: 480px) {
-      .editor-container,
-      iframe {
-        height: 26vh !important;
-      }
-
-      .CodeMirror { font-size: 11px; }
-      .menu-button { font-size: 13px; padding: 6px 10px; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <header>
     <div>
-      <h1>🛠 Простой HTML/CSS Редактор</h1>
-      <p>Редактируй слева, смотри результат справа</p>
+      <h1>🛠 Редактор для дизайнеров</h1>
+      <p>Пиши код → смотри результат. Всё в реальном времени!</p>
     </div>
     <div class="menu-wrapper">
-      <button class="menu-button" onclick="toggleMenu()">☰ Меню</button>
+      <button class="menu-button" id="menu-toggle" title="Открыть/закрыть меню">☰ Меню</button>
       <div class="dropdown-menu" id="dropdown-menu">
         <strong>Основные действия</strong>
-        <button onclick="applyCode()">🔄 Применить</button>
-        <button onclick="saveHTML()">💾 Сохранить HTML</button>
-        <button onclick="saveCSS()">💾 Сохранить CSS</button>
-        <button onclick="resetToDefault()">↩ Сбросить</button>
+        <button id="apply-btn" title="Обновить предпросмотр (Ctrl+Enter)">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+            <path d="M21 12A9 9 0 0 0 12 3z"/>
+          </svg>
+          Применить
+        </button>
+        <button id="save-html-btn" title="Сохранить HTML-код как файл">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Сохранить HTML
+        </button>
+        <button id="save-css-btn" title="Сохранить CSS-код как файл">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a9 9 0 0 0-9 9c0 2.5.9 4.7 2.4 6.4"/>
+            <path d="M2 22c1.8-1.8 4.2-3 7-3"/>
+            <path d="m17 14 4-4-4-4"/>
+          </svg>
+          Сохранить CSS
+        </button>
+        <button id="reset-btn" title="Вернуть пример по умолчанию">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 2v6h6"/>
+            <path d="M21 12A9 9 0 0 0 3 12"/>
+            <path d="M21 22v-6h-6"/>
+          </svg>
+          Сбросить
+        </button>
         <hr>
         <strong>Шаблоны</strong>
-        <button onclick="insertTemplate('button')">➕ Добавить кнопку</button>
-        <button onclick="insertTemplate('card')">➕ Добавить карточку</button>
-        <button onclick="insertTemplate('form')">➕ Добавить форму</button>
-        <button onclick="insertTemplate('nav')">➕ Добавить меню</button>
+        <button data-template="button" title="Вставить HTML кнопки">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Кнопка
+        </button>
+        <button data-template="card" title="Вставить карточку с заголовком и текстом">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="9" y1="16" x2="15" y2="16"/>
+          </svg>
+          Карточка
+        </button>
+        <button data-template="form" title="Вставить простую форму">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Форма
+        </button>
+        <button data-template="nav" title="Вставить горизонтальное меню">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          Меню
+        </button>
         <hr>
-        <button onclick="openHTML()">📂 Открыть HTML</button>
-        <button onclick="openCSS()">📂 Открыть CSS</button>
-        <button onclick="toggleTheme()">🌙 Переключить тему</button>
+        <button id="open-html-btn" title="Загрузить HTML из файла">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/>
+          </svg>
+          Открыть HTML
+        </button>
+        <button id="open-css-btn" title="Загрузить CSS из файла">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/>
+          </svg>
+          Открыть CSS
+        </button>
+        <button id="toggle-js-btn" title="Добавить/убрать редактор JavaScript">+ JS</button>
+        <button id="theme-btn" title="Переключить светлую/тёмную тему">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2"/>
+            <path d="M12 21v2"/>
+            <path d="M4.22 4.22l1.42 1.42"/>
+            <path d="M18.36 18.36l1.42 1.42"/>
+            <path d="M1 12h2"/>
+            <path d="M21 12h2"/>
+            <path d="M4.22 19.78l1.42-1.42"/>
+            <path d="M18.36 5.64l1.42-1.42"/>
+          </svg>
+          Тема
+        </button>
       </div>
     </div>
   </header>
 
   <main>
     <div class="editor-container">
+      <div class="editor-label">HTML</div>
       <textarea id="html-editor"></textarea>
     </div>
-
     <div class="editor-container">
+      <div class="editor-label">CSS</div>
       <textarea id="css-editor"></textarea>
     </div>
-
-    <iframe id="output-frame"></iframe>
+    <div class="editor-container js-editor-container hidden">
+      <div class="editor-label">JS</div>
+      <textarea id="js-editor"></textarea>
+    </div>
+    <div class="preview-container">
+      <iframe id="output-frame"></iframe>
+    </div>
   </main>
 
   <input type="file" id="file-html" class="hidden-file-input" accept=".html,.txt">
   <input type="file" id="file-css" class="hidden-file-input" accept=".css,.txt">
 
-  <!-- CodeMirror JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/htmlmixed/htmlmixed.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/css/css.min.js"></script>
-
-  <script>
-    const defaultHTML = `<!-- HTML код -->\n<h1>Привет, дизайнер!</h1>\n<p>Начни редактировать слева.</p>`;
-    
-    const defaultCSS = `/* CSS стили */\nbody {\n  background-color: #f4f4f4;\n  color: #333;\n  padding: 20px;\n  font-family: sans-serif;\n}\n\nh1 {\n  color: #FF6B6B;\n}`;
-
-    const htmlEditor = CodeMirror.fromTextArea(document.getElementById('html-editor'), {
-      mode: 'text/html',
-      theme: 'dracula',
-      lineNumbers: true,
-    });
-
-    const cssEditor = CodeMirror.fromTextArea(document.getElementById('css-editor'), {
-      mode: 'text/css',
-      theme: 'dracula',
-      lineNumbers: true,
-    });
-
-    const outputFrame = document.getElementById('output-frame');
-
-    const templates = {
-      button: `<button class="btn">Кнопка</button>`,
-      card: `<div class="card"><h2>Карточка</h2><p>Текст внутри карточки</p></div>`,
-      form: `<form><label>Имя:<br><input type="text" /></label><br><br><button type="submit">Отправить</button></form>`,
-      nav: `<nav><a href="#">Главная</a> | <a href="#">О нас</a> | <a href="#">Контакты</a></nav>`
-    };
-
-    function insertTemplate(type) {
-      const code = templates[type];
-      htmlEditor.replaceSelection(code + '\n');
-      applyCode();
-    }
-
-    function toggleMenu() {
-      const menu = document.getElementById('dropdown-menu');
-      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function isWellFormed(html) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      return !doc.querySelector('parsererror');
-    }
-
-    function applyCode() {
-      let html = htmlEditor.getValue();
-      let css = cssEditor.getValue();
-
-      try {
-        if (!isWellFormed(html)) {
-          throw new Error("HTML содержит ошибки разметки");
-        }
-
-        const fullHTML = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>${css}</style>
-          </head>
-          <body>
-            ${html}
-          </body>
-          </html>
-        `;
-        outputFrame.srcdoc = fullHTML;
-
-        htmlEditor.getWrapperElement().style.borderColor = '#ccc';
-        cssEditor.getWrapperElement().style.borderColor = '#ccc';
-
-      } catch (e) {
-        alert("Ошибка в коде!\n" + e.message);
-        htmlEditor.getWrapperElement().style.borderColor = 'red';
-        cssEditor.getWrapperElement().style.borderColor = 'red';
-      }
-
-      localStorage.setItem('html', html);
-      localStorage.setItem('css', css);
-    }
-
-    async function saveTextToFile(content, suggestedName, mimeType = 'text/plain') {
-      if ('showSaveFilePicker' in window) {
-        try {
-          const handle = await window.showSaveFilePicker({
-            suggestedName,
-            types: [{
-              description: 'Текстовые файлы',
-              accept: { [mimeType]: ['.txt', '.html', '.css'] },
-            }]
-          });
-          const writable = await handle.createWritable();
-          await writable.write(content);
-          await writable.close();
-          alert(`Файл "${suggestedName}" успешно сохранён.`);
-          return;
-        } catch (err) {
-          console.warn("Ошибка при использовании showSaveFilePicker:", err);
-        }
-      }
-
-      const a = document.createElement('a');
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      a.href = url;
-      a.download = suggestedName;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function saveHTML() {
-      const content = htmlEditor.getValue();
-      saveTextToFile(content, 'index.html', 'text/html');
-    }
-
-    function saveCSS() {
-      const content = cssEditor.getValue();
-      saveTextToFile(content, 'style.css', 'text/css');
-    }
-
-    function resetToDefault() {
-      if (confirm("Вы уверены? Это сбросит все изменения.")) {
-        htmlEditor.setValue(defaultHTML);
-        cssEditor.setValue(defaultCSS);
-        localStorage.removeItem('html');
-        localStorage.removeItem('css');
-        applyCode();
-      }
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
-      const isDark = document.body.classList.contains('dark');
-      const theme = isDark ? 'dracula' : 'base16-light';
-      htmlEditor.setOption('theme', theme);
-      cssEditor.setOption('theme', theme);
-    }
-
-    function openHTML() {
-      document.getElementById('file-html').click();
-    }
-
-    function openCSS() {
-      document.getElementById('file-css').click();
-    }
-
-    document.getElementById('file-html').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          htmlEditor.setValue(evt.target.result);
-          applyCode();
-        };
-        reader.readAsText(file);
-      }
-    });
-
-    document.getElementById('file-css').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          cssEditor.setValue(evt.target.result);
-          applyCode();
-        };
-        reader.readAsText(file);
-      }
-    });
-
-    window.onload = () => {
-      const savedHtml = localStorage.getItem('html');
-      const savedCss = localStorage.getItem('css');
-
-      if (savedHtml) htmlEditor.setValue(savedHtml);
-      else htmlEditor.setValue(defaultHTML);
-
-      if (savedCss) cssEditor.setValue(savedCss);
-      else cssEditor.setValue(defaultCSS);
-
-      applyCode();
-
-      document.addEventListener('click', function(e) {
-        const menu = document.getElementById('dropdown-menu');
-        if (!e.target.closest('.menu-wrapper')) {
-          menu.style.display = 'none';
-        }
-      });
-    };
-  </script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+  <script src="js/editor.js"></script>
 </body>
 </html>
